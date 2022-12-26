@@ -6,6 +6,7 @@ import com.company.automaticirrigationsystem.exception.NotFound;
 import com.company.automaticirrigationsystem.model.Plot;
 import com.company.automaticirrigationsystem.repository.PlotRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PlotService {
 
     private final PlotRepository plotRepository;
@@ -24,16 +26,19 @@ public class PlotService {
 
     public Plot create(Plot plot) {
         plot.setId(null);
+        log.debug("storing new Plot entity to datastore");
 
         return plotRepository.save(plot);
     }
 
     public Plot findById(Long id) {
+        log.debug("Retrieving the plot entity with ID={} from the datastore.", id);
         return plotRepository.findById(id)
                 .orElseThrow(() ->  new NotFound(Plot.class));
     }
 
     public void deleteById(Long id) {
+        log.debug("deleting plot entity with id={} from datastore", id);
         plotRepository.deleteById(id);
     }
 
@@ -46,6 +51,7 @@ public class PlotService {
 
         BeanUtils.copyProperties(plot, target, "id", "slots");
 
+        log.debug("updating plot entity with id={} from datastore", target.getId());
         return plotRepository.save(target);
     }
 }
