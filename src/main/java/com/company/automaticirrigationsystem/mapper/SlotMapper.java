@@ -14,12 +14,12 @@ public interface SlotMapper {
     SlotMapper INSTANCE = Mappers.getMapper(SlotMapper.class);
 
     @Mapping(source = "plot.id", target = "plotId")
-    SlotDto slotToSlotDto(Slot slotDto);
+    SlotDto slotToDto(Slot slotDto);
 
-    List<SlotDto> slotToSlotDto(List<Slot> slotDto);
+    List<SlotDto> slotToDto(List<Slot> slotDto);
 
     @Mapping(source = "plotId", target = "plot.id")
-    Slot slotDtoToSlot(SlotDto slot);
+    Slot dtoToSlot(SlotDto slot);
 
-    List<Slot> slotDtoToSlot(List<SlotDto> slotDto);
+    List<Slot> dtoToSlot(List<SlotDto> slotDto);
 }

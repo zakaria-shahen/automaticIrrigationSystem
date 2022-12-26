@@ -4,6 +4,7 @@ package com.company.automaticirrigationsystem.service;
 import com.company.automaticirrigationsystem.exception.IdNotEntered;
 import com.company.automaticirrigationsystem.exception.NotFound;
 import com.company.automaticirrigationsystem.model.Plot;
+import com.company.automaticirrigationsystem.model.Slot;
 import com.company.automaticirrigationsystem.repository.PlotRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -53,5 +54,15 @@ public class PlotService {
 
         log.debug("updating plot entity with id={} from datastore", target.getId());
         return plotRepository.save(target);
+    }
+
+    public Plot getLatestPlot(Slot newer, Slot older) {
+        if (! older.getPlot().getId().equals(newer.getPlot().getId())) {
+            log.debug("Retrieving newer plot from datastore");
+            return findById(newer.getPlot().getId());
+        }
+
+        log.debug("No difference between newer and older Plot");
+        return older.getPlot();
     }
 }
