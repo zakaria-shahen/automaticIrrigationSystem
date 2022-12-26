@@ -1,21 +1,18 @@
-package com.company.automaticirrigationsystem.model;
+package com.company.automaticirrigationsystem.dto;
 
 import com.company.automaticirrigationsystem.model.enums.SlotStatus;
 import lombok.*;
+import org.springframework.hateoas.RepresentationModel;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity
-@NoArgsConstructor
 @Getter
 @Setter
 @AllArgsConstructor
-@Builder
-public class IrrigationLog {
+@NoArgsConstructor
+@ToString
+public class IrrigationLogDto extends RepresentationModel<IrrigationLogDto> {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private LocalDateTime dateTime;
@@ -24,7 +21,6 @@ public class IrrigationLog {
 
     private String details;
 
-    @ManyToOne(optional = false)
-    private Slot slot;
+    private Long slotId;
 
 }
