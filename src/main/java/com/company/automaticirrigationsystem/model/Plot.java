@@ -23,7 +23,10 @@ public class Plot {
 
     private Long cultivatedArea;
 
-    private LocalTime waitBeforeCloseSlots;
+    /**
+     * Wait X ms before close slot
+     */
+    private Integer waitBeforeCloseSlots;
 
     /**
      *  Amount of water per irrigation period
@@ -32,12 +35,12 @@ public class Plot {
 
 
     /**
-     *  Irrigation every X hour
+     *  Irrigation every X ms
      */
-    private LocalTime irrigationEvery;
+    private Integer irrigationEvery;
 
     /**
-     * Retry calls before send Alert
+     * Retry calls (If the irrigation request fails to be sent) before send Alert
      */
     private Integer retryCallLimit;
 

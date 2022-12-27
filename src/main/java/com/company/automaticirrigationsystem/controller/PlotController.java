@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -35,14 +36,14 @@ public class PlotController {
     }
 
     @PostMapping
-    public PlotDto post(@RequestBody PlotDto plotDto) {
+    public PlotDto post(@Valid @RequestBody PlotDto plotDto) {
         log.debug("visited POST `{}` path", "/plot");
         var plot =  plotService.create(plotMapper.dtoToPlot(plotDto));
         return plotMapper.plotToDto(plot);
     }
 
     @PatchMapping
-    public PlotDto patch(@RequestBody PlotDto plotDto) {
+    public PlotDto patch(@Valid @RequestBody PlotDto plotDto) {
         log.debug("visited PATCH `{}` path", "/plot");
         var plot =  plotService.partialUpdate(plotMapper.dtoToPlot(plotDto));
         return plotMapper.plotToDto(plot);

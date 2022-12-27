@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -35,14 +36,14 @@ public class SlotController {
     }
 
     @PostMapping
-    public SlotDto post(@RequestBody SlotDto slotDto) {
+    public SlotDto post(@Valid @RequestBody SlotDto slotDto) {
         log.debug("visited POST `{}` path", "/slot");
         var slot = slotService.create(slotMapper.dtoToSlot(slotDto));
         return slotMapper.slotToDto(slot);
     }
 
     @PatchMapping
-    public SlotDto patch(@RequestBody SlotDto slotDto) {
+    public SlotDto patch(@Valid @RequestBody SlotDto slotDto) {
         log.debug("visited PATCH `{}` path", "/slot");
         var slot = slotService.partialUpdate(slotMapper.dtoToSlot(slotDto));
         return slotMapper.slotToDto(slot);

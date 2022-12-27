@@ -3,6 +3,7 @@ package com.company.automaticirrigationsystem.dto;
 import lombok.*;
 import org.springframework.hateoas.RepresentationModel;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
@@ -15,6 +16,7 @@ public class SlotDto extends RepresentationModel<SlotDto> {
 
     private Integer retryCall;
 
+    @NotNull
     private Long plotId;
 
     private List<IrrigationLogDto> irrigationLogs;

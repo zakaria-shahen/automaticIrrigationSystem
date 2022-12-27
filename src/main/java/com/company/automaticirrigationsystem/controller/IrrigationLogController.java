@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -35,7 +36,7 @@ public class IrrigationLogController {
     }
 
     @PostMapping
-    public IrrigationLogDto post(@RequestBody IrrigationLogDto irrigationLogDto) {
+    public IrrigationLogDto post(@Valid @RequestBody IrrigationLogDto irrigationLogDto) {
         log.debug("visited POST `{}` path", "/irrigation_log");
         var irrigationLog =  irrigationLogService.create(irrigationLogMapper.dtoToIrrigationLog(irrigationLogDto));
         return irrigationLogMapper.irrigationLogToDto(irrigationLog);

@@ -2,7 +2,6 @@ package com.company.automaticirrigationsystem.service;
 
 import com.company.automaticirrigationsystem.exception.NotFound;
 import com.company.automaticirrigationsystem.model.IrrigationLog;
-import com.company.automaticirrigationsystem.model.Slot;
 import com.company.automaticirrigationsystem.repository.IrrigationLogRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +31,7 @@ public class IrrigationLogService {
         irrigationLog.setId(null);
         irrigationLog.setSlot(slotService.findById(irrigationLog.getSlot().getId()));
 
-        log.debug("storing new IrrigationLog entity to datastore");
+        log.debug("storing new IrrigationLog entity to datastore and status={}", irrigationLog.getStatus());
 
         return irrigationLogRepository.save(irrigationLog);
     }

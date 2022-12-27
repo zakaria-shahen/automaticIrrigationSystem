@@ -1,7 +1,6 @@
 package com.company.automaticirrigationsystem.model;
 
 
-import com.company.automaticirrigationsystem.model.enums.SlotStatus;
 import lombok.*;
 
 import javax.persistence.*;
@@ -19,9 +18,11 @@ public class Slot {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Integer retryCall;
-
-
+    /**
+     * Number of reconnect attempts,
+     * The value returns to zero after the connection succeeds or alert succeeds
+     */
+    private Integer attempts;
 
     @ManyToOne(optional = false)
     private Plot plot;
@@ -29,4 +30,7 @@ public class Slot {
     @OneToMany(mappedBy = "slot")
     private List<IrrigationLog> irrigationLogs;
 
+    public Slot(Long id) {
+        this.id = id;
+    }
 }

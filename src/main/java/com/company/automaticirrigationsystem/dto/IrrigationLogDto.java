@@ -4,6 +4,8 @@ import com.company.automaticirrigationsystem.model.enums.SlotStatus;
 import lombok.*;
 import org.springframework.hateoas.RepresentationModel;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDateTime;
 
 @Getter
@@ -15,12 +17,15 @@ public class IrrigationLogDto extends RepresentationModel<IrrigationLogDto> {
 
     private Long id;
 
+    @PastOrPresent
     private LocalDateTime dateTime;
 
+    @NotNull
     private SlotStatus status;
 
     private String details;
 
+    @NotNull
     private Long slotId;
 
 }

@@ -4,7 +4,8 @@ package com.company.automaticirrigationsystem.dto;
 import lombok.*;
 import org.springframework.hateoas.RepresentationModel;
 
-import java.time.LocalTime;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @Getter
@@ -20,12 +21,16 @@ public class PlotDto extends RepresentationModel<PlotDto> {
 
     private Long cultivatedArea;
 
-    private LocalTime waitBeforeCloseSlots;
+    @PositiveOrZero
+    private Integer waitBeforeCloseSlots;
 
+    @PositiveOrZero
     private Float amountWater;
 
-    private LocalTime irrigationEvery;
+    @Positive
+    private Integer irrigationEvery;
 
+    @PositiveOrZero
     private Integer retryCallLimit;
 
     private List<SlotDto> slots;
