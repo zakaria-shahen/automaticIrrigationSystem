@@ -1,5 +1,6 @@
 package com.company.automaticirrigationsystem;
 
+import com.company.automaticirrigationsystem.event.FailureIrrigationLogEventConfig;
 import com.company.automaticirrigationsystem.model.IrrigationLog;
 import com.company.automaticirrigationsystem.model.Plot;
 import com.company.automaticirrigationsystem.model.Slot;
@@ -13,6 +14,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Component
 @Slf4j
@@ -22,6 +24,7 @@ public class DataLoader implements ApplicationRunner {
     private final PlotService plotService;
     private final SlotRepository slotRepository;
     private final IrrigationLogRepository irrigationLogRepository;
+    private final FailureIrrigationLogEventConfig failureIrrigationLogEventConfig;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
@@ -44,7 +47,7 @@ public class DataLoader implements ApplicationRunner {
         );
 
         // slotList = slotList.stream().map();
-        slotList = (List<Slot>) slotRepository.saveAll(slotList);
+        slotList = slotRepository.saveAll(slotList);
 
         log.warn("Slot data loaded - Dump Data");
 
@@ -58,6 +61,11 @@ public class DataLoader implements ApplicationRunner {
         irrigationLogList = irrigationLogRepository.saveAll(irrigationLogList);
 
         log.warn("irrigationLog data loaded - Dump Data");
+
+        failureIrrigationLogEventConfig.failureIrrigationLogEventPublisher(
+                        1L,
+                        (int) TimeUnit.MINUTES.toMillis(1)
+        );
 
     }
 

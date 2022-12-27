@@ -2,16 +2,28 @@ version: "3.8"
 services:
   mysql:
     image: mysql
+    container_name: mysql
     ports:
       - "3306:3306"
     environment:
-#      - MYSQL_USER=root
+#      - MYSQL_USER=root # by default
       - MYSQL_ROOT_PASSWORD=1234
       - MYSQL_DATABASE=automatic_irrigation_system
     networks:
       backend:
 
-
+  rabbitmq:
+    build:
+      dockerfile: Dockerfile-rabbitmq
+    container_name: rabbitMQ
+    environment:
+      - RABBITMQ_DEFAULT_USER=root
+      - RABBITMQ_DEFAULT_PASS=root
+    ports:
+#      - "5672:5672" # by default
+      - "15672:15672"
+    networks:
+      backend:
 
 networks:
   backend:
