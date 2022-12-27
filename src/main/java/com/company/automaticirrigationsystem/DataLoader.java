@@ -1,6 +1,6 @@
 package com.company.automaticirrigationsystem;
 
-import com.company.automaticirrigationsystem.event.FailureIrrigationLogEventConfig;
+import com.company.automaticirrigationsystem.event.FailureIrrigationLogEvent;
 import com.company.automaticirrigationsystem.model.IrrigationLog;
 import com.company.automaticirrigationsystem.model.Plot;
 import com.company.automaticirrigationsystem.model.Slot;
@@ -24,15 +24,16 @@ public class DataLoader implements ApplicationRunner {
     private final PlotService plotService;
     private final SlotRepository slotRepository;
     private final IrrigationLogRepository irrigationLogRepository;
-    private final FailureIrrigationLogEventConfig failureIrrigationLogEventConfig;
+    private final FailureIrrigationLogEvent failureIrrigationLogEvent;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
+        var ms = (int) TimeUnit.MINUTES.toMillis(10);
         var plotList = List.of(
-                Plot.builder().amountWater(1f).build(),
-                Plot.builder().amountWater(1f).build(),
-                Plot.builder().amountWater(1f).build(),
-                Plot.builder().amountWater(1f).build()
+                Plot.builder().amountWater(1f).waitBeforeCloseSlots(ms).build(),
+                Plot.builder().amountWater(1f).waitBeforeCloseSlots(ms).build(),
+                Plot.builder().amountWater(1f).waitBeforeCloseSlots(ms).build(),
+                Plot.builder().amountWater(1f).waitBeforeCloseSlots(ms).build()
         );
 
         plotList = plotList.stream().map(plotService::create).toList();
@@ -62,7 +63,7 @@ public class DataLoader implements ApplicationRunner {
 
         log.warn("irrigationLog data loaded - Dump Data");
 
-        failureIrrigationLogEventConfig.failureIrrigationLogEventPublisher(
+        failureIrrigationLogEvent.publishing(
                         1L,
                         (int) TimeUnit.MINUTES.toMillis(1)
         );

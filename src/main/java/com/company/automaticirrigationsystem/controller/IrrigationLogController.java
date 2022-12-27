@@ -38,7 +38,13 @@ public class IrrigationLogController {
     @PostMapping
     public IrrigationLogDto post(@Valid @RequestBody IrrigationLogDto irrigationLogDto) {
         log.debug("visited POST `{}` path", "/irrigation_log");
-        var irrigationLog =  irrigationLogService.create(irrigationLogMapper.dtoToIrrigationLog(irrigationLogDto));
+        // TODO: security
+        boolean isIot = false;
+
+        var irrigationLog =  irrigationLogService.create(
+                irrigationLogMapper.dtoToIrrigationLog(irrigationLogDto),
+                isIot
+        );
         return irrigationLogMapper.irrigationLogToDto(irrigationLog);
     }
 

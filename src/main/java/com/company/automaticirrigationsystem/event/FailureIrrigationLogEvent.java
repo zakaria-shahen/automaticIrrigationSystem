@@ -21,19 +21,19 @@ import java.util.function.Consumer;
 @Configuration
 @RequiredArgsConstructor
 @Slf4j
-public class FailureIrrigationLogEventConfig {
+public class FailureIrrigationLogEvent {
 
     @Value("app.WaitBeforeAlert")
     private static Integer waitBeforeAlert = 15;
-    public static final String INPUT_EVENT_NAME = "failureIrrigationLogEvent-out-0";
+    public static final String OUTPUT_EVENT_NAME = "failureIrrigationLogEvent-out-0";
 
     private final IrrigationLogService irrigationLogService;
-    private final StreamBridge bridge;
     private final AlertService alertService;
+    private final StreamBridge bridge;
 
 
     @Bean
-    public Consumer<Long> failureIrrigationLogEventListener() {
+    protected Consumer<Long> failureIrrigationLogEventListener() {
         return slotId -> {
             String message = "The irrigation request has been sent to the IoT, but no callback for completing the process within the designated delay has been received.";
 
@@ -45,23 +45,24 @@ public class FailureIrrigationLogEventConfig {
                             .slot(slot)
                             .status(SlotStatus.ERROR_IRRIGATION)
                             .details(message)
-                            .build()
+                            .build(),
+                    false
             );
 
             alertService.alert(message);
         };
     }
 
-    public void failureIrrigationLogEventPublisher(Long slotID, Integer afterMilliseconds) {
+    public void publishing(Long slotID, Integer afterMilliseconds) {
 
         Integer daley = afterMilliseconds + waitBeforeAlert;
 
         log.debug("Publishing failureIrrigationLog Event with daley={}", daley);
 
-        Map<String, Object> headers = Map.of(MessageProperties.X_DELAY, 30000);
+        Map<String, Object> headers = Map.of(MessageProperties.X_DELAY, daley);
 
         bridge.send(
-                INPUT_EVENT_NAME,
+                OUTPUT_EVENT_NAME,
                 new GenericMessage<>(slotID, headers)
         );
 

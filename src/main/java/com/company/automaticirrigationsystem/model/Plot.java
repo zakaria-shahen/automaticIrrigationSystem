@@ -4,7 +4,6 @@ package com.company.automaticirrigationsystem.model;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalTime;
 import java.util.List;
 
 @Entity
@@ -32,7 +31,6 @@ public class Plot {
      *  Amount of water per irrigation period
      */
     private Float amountWater;
-
 
     /**
      *  Irrigation every X ms
