@@ -18,7 +18,8 @@ public class IrrigationLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDateTime dateTime;
+    @Builder.Default
+    private LocalDateTime dateTime = LocalDateTime.now();
 
     private SlotStatus status;
 

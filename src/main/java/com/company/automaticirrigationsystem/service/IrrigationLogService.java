@@ -2,6 +2,7 @@ package com.company.automaticirrigationsystem.service;
 
 import com.company.automaticirrigationsystem.exception.NotFound;
 import com.company.automaticirrigationsystem.model.IrrigationLog;
+import com.company.automaticirrigationsystem.model.Slot;
 import com.company.automaticirrigationsystem.model.enums.SlotStatus;
 import com.company.automaticirrigationsystem.repository.IrrigationLogRepository;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +42,9 @@ public class IrrigationLogService {
     }
 
     private void handleSlotStatus(IrrigationLog irrigationLog, boolean isIot) {
+
         Boolean requestStatus = iotSlotService.irrigation(irrigationLog.getSlot());
+
         if (isIot) {
             log.debug("Updating Slot Status by IoT");
         } else if (requestStatus.equals(true)) {
@@ -50,4 +53,27 @@ public class IrrigationLogService {
             irrigationLog.setStatus(SlotStatus.ERROR_OPEN_REQUEST);
         }
     }
+
+    public void irrigation(List<Slot> slots) {
+
+        List<IrrigationLog> irrigationLogs = slots.stream().map(slot -> {
+            IrrigationLog irrigationLog = IrrigationLog.builder()
+                    .slot(slot)
+                    .build();
+
+            handleSlotStatus(irrigationLog, false);
+
+            return irrigationLog;
+
+        }).toList();
+
+        irrigationLogRepository.saveAll(irrigationLogs);
+
+
+
+
+
+
+    }
+
 }
