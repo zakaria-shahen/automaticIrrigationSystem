@@ -14,8 +14,6 @@ import java.util.List;
 public class SlotDto extends RepresentationModel<SlotDto> {
     private Long id;
 
-    private Integer retryCall;
-
     @NotNull
     private Long plotId;
 

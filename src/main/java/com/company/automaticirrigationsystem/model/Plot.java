@@ -46,7 +46,8 @@ public class Plot {
     /**
      * Retry calls (If the irrigation request fails to be sent) before send Alert
      */
-    private Integer retryCallLimit;
+    @Builder.Default
+    private Integer retryCallLimit = 3;
 
     @OneToMany(mappedBy = "plot")
     private List<Slot> slots;

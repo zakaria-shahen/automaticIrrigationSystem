@@ -7,7 +7,6 @@ import com.company.automaticirrigationsystem.model.enums.SlotStatus;
 import com.company.automaticirrigationsystem.repository.IrrigationLogRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotEmpty;
@@ -19,8 +18,6 @@ import java.util.List;
 @Slf4j
 public class IrrigationLogService {
 
-    @Value("app.retryBeforeAlert")
-    private static Integer retryBeforeAlert = 3;
     private final IrrigationLogRepository irrigationLogRepository;
     private final SlotService slotService;
     private final IotSlotService iotSlotService;
@@ -59,8 +56,8 @@ public class IrrigationLogService {
                     .slot(slot)
                     .build();
 
-            irrigation(irrigationLog);
-
+            boolean requestStatus = irrigation(irrigationLog);
+            irrigationLog.setStatus(mappingRequestStatusToSlotStatus(requestStatus));
             return irrigationLog;
 
         }).toList();
@@ -68,11 +65,13 @@ public class IrrigationLogService {
         irrigationLogRepository.saveAll(irrigationLogs);
     }
 
-    private void irrigation(@NotNull IrrigationLog irrigationLog) {
+    private Boolean irrigation(@NotNull IrrigationLog irrigationLog) {
         Slot slot = irrigationLog.getSlot();
         Boolean requestStatus = iotSlotService.irrigation(slot);
+        int retryBeforeAlert = irrigationLog.getSlot().getPlot().getRetryCallLimit();
 
-        for (int attempts = 0; requestStatus.equals(false) && attempts < retryBeforeAlert; attempts++) {
+        while (requestStatus.equals(false) && retryBeforeAlert > 0) {
+            retryBeforeAlert--;
             requestStatus = iotSlotService.irrigation(slot);
         }
 
@@ -81,9 +80,8 @@ public class IrrigationLogService {
             log.debug(message);
             alertService.alert(message);
         }
-
-        irrigationLog.setStatus(mappingRequestStatusToSlotStatus(requestStatus));
-
+        
+        return requestStatus;
     }
 
     private SlotStatus mappingRequestStatusToSlotStatus(@NotNull boolean requestStatus) {
