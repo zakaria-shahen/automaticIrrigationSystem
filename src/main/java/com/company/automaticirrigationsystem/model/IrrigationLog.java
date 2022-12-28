@@ -2,11 +2,15 @@ package com.company.automaticirrigationsystem.model;
 
 import com.company.automaticirrigationsystem.model.enums.SlotStatus;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@SQLDelete(sql = "update irrigation_log set deleted=true where id= ?")
+@Where(clause = "deleted=false")
 @NoArgsConstructor
 @Getter
 @Setter
@@ -27,5 +31,8 @@ public class IrrigationLog {
 
     @ManyToOne(optional = false)
     private Slot slot;
+
+    @Builder.Default
+    private Boolean deleted = false;
 
 }

@@ -2,12 +2,16 @@ package com.company.automaticirrigationsystem.model;
 
 
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Entity
+@SQLDelete(sql = "update plot set deleted=true where id= ?")
+@Where(clause = "deleted=false")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -46,4 +50,7 @@ public class Plot {
 
     @OneToMany(mappedBy = "plot")
     private List<Slot> slots;
+
+    @Builder.Default
+    private Boolean deleted = false;
 }
