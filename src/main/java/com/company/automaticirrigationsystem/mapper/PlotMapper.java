@@ -17,7 +17,6 @@ public interface PlotMapper {
 
     List<PlotDto> plotToDto(List<Plot> plots);
 
-    @Mapping(target = "id", ignore = true)
     @Mapping(target = "slots", ignore = true)
     Plot dtoToPlot(PlotDto plotDto);
 

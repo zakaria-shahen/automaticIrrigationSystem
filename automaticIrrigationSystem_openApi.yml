@@ -1,0 +1,239 @@
+openapi: 3.0.0
+info:
+  title: automaticIrrigationSystem
+  version: 1.0.0
+servers:
+  - url: http://{{url}}plot
+  - url: http://{{url}}slot
+  - url: http://{{url}}irrigation_log
+tags:
+  - name: Plot
+  - name: Slot
+  - name: IrrigationLog
+paths:
+  /:
+    get:
+      tags:
+        - IrrigationLog
+      summary: All
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            Transfer-Encoding:
+              schema:
+                type: string
+                example: chunked
+            Date:
+              schema:
+                type: string
+                example: Wed, 28 Dec 2022 17:20:11 GMT
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=60
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                - id: 1
+                  dateTime: '2022-12-28T19:13:17.521573'
+                  status: null
+                  details: null
+                  slotId: 1
+                  links: []
+                - id: 2
+                  dateTime: '2022-12-28T19:13:17.521573'
+                  status: null
+                  details: null
+                  slotId: 2
+                  links: []
+                - id: 3
+                  dateTime: '2022-12-28T19:13:17.522103'
+                  status: null
+                  details: null
+                  slotId: 3
+                  links: []
+                - id: 4
+                  dateTime: '2022-12-28T19:13:17.522103'
+                  status: null
+                  details: null
+                  slotId: 4
+                  links: []
+                - id: 5
+                  dateTime: '2022-12-28T19:14:29.74465'
+                  status: compete_irrigation
+                  details: null
+                  slotId: 1
+                  links: []
+    post:
+      tags:
+        - IrrigationLog
+      summary: Create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                status: compete_irrigation
+                slotId: 1
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                example: application/hal+json
+            Transfer-Encoding:
+              schema:
+                type: string
+                example: chunked
+            Date:
+              schema:
+                type: string
+                example: Wed, 28 Dec 2022 17:20:57 GMT
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=60
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                id: 6
+                dateTime: '2022-12-28T19:20:57.7483962'
+                status: compete_irrigation
+                details: null
+                slotId: 1
+    patch:
+      tags:
+        - Plot
+      summary: edit
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                id: 3
+                agriculturalCrop: any
+                cultivatedArea: 15
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /1:
+    get:
+      tags:
+        - IrrigationLog
+      summary: ID
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                example: application/hal+json
+            Transfer-Encoding:
+              schema:
+                type: string
+                example: chunked
+            Date:
+              schema:
+                type: string
+                example: Wed, 28 Dec 2022 17:20:37 GMT
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=60
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                id: 1
+                dateTime: '2022-12-28T19:13:17.521573'
+                status: null
+                details: null
+                slotId: 1
+    delete:
+      tags:
+        - Plot
+      summary: Edit
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Length:
+              schema:
+                type: integer
+                example: '0'
+            Date:
+              schema:
+                type: string
+                example: Wed, 28 Dec 2022 17:19:29 GMT
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=60
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null
+  /4:
+    delete:
+      tags:
+        - Slot
+      summary: delete
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Length:
+              schema:
+                type: integer
+                example: '0'
+            Date:
+              schema:
+                type: string
+                example: Wed, 28 Dec 2022 17:33:06 GMT
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=60
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: null

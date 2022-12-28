@@ -42,13 +42,6 @@ public class SlotController {
         return slotMapper.slotToDto(slot);
     }
 
-    @PatchMapping
-    public SlotDto patch(@Valid @RequestBody SlotDto slotDto) {
-        log.debug("visited PATCH `{}` path", "/slot");
-        var slot = slotService.partialUpdate(slotMapper.dtoToSlot(slotDto));
-        return slotMapper.slotToDto(slot);
-    }
-
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         log.debug("visited DELETE `{}` path", "/slot/{id}");

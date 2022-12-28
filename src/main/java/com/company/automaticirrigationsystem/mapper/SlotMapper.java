@@ -20,7 +20,6 @@ public interface SlotMapper {
 
     @Mapping(source = "plotId", target = "plot.id")
     @Mapping(target = "plot", ignore = true)
-    @Mapping(target = "id", ignore = true)
     Slot dtoToSlot(SlotDto slot);
 
     List<Slot> dtoToSlot(List<SlotDto> slotDto);

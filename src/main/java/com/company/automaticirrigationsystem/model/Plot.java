@@ -49,7 +49,7 @@ public class Plot {
     @Builder.Default
     private Integer retryCallLimit = 3;
 
-    @OneToMany(mappedBy = "plot")
+    @OneToMany(mappedBy = "plot", cascade = CascadeType.REMOVE)
     private List<Slot> slots;
 
     @Builder.Default

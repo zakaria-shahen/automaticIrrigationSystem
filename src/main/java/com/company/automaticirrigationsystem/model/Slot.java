@@ -25,7 +25,7 @@ public class Slot {
     @ManyToOne(optional = false)
     private Plot plot;
 
-    @OneToMany(mappedBy = "slot")
+    @OneToMany(mappedBy = "slot", cascade = CascadeType.REMOVE)
     private List<IrrigationLog> irrigationLogs;
 
     @Builder.Default
