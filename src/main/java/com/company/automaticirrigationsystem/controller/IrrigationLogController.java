@@ -36,14 +36,13 @@ public class IrrigationLogController {
     }
 
     @PostMapping
+    // TODO: IoT Only
     public IrrigationLogDto post(@Valid @RequestBody IrrigationLogDto irrigationLogDto) {
         log.debug("visited POST `{}` path", "/irrigation_log");
-        // TODO: security
-        boolean isIot = false;
 
-        var irrigationLog =  irrigationLogService.create(
-                irrigationLogMapper.dtoToIrrigationLog(irrigationLogDto),
-                isIot
+        log.debug("Updating Slot Status by IoT");
+        var irrigationLog =  irrigationLogService.saveIrrigationLogAndFindSlot(
+                irrigationLogMapper.dtoToIrrigationLog(irrigationLogDto)
         );
         return irrigationLogMapper.irrigationLogToDto(irrigationLog);
     }

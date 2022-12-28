@@ -1,25 +1,31 @@
 package com.company.automaticirrigationsystem.service;
 
 
+import com.company.automaticirrigationsystem.event.SendIrrigationRequestEvent;
 import com.company.automaticirrigationsystem.exception.IdNotEntered;
 import com.company.automaticirrigationsystem.exception.NotFound;
 import com.company.automaticirrigationsystem.model.Plot;
 import com.company.automaticirrigationsystem.model.Slot;
 import com.company.automaticirrigationsystem.repository.PlotRepository;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class PlotService {
 
     private final PlotRepository plotRepository;
+    private final SendIrrigationRequestEvent sendIrrigationRequestEvent;
+
+    public PlotService(PlotRepository plotRepository, @Lazy SendIrrigationRequestEvent sendIrrigationRequestEvent) {
+        this.plotRepository = plotRepository;
+        this.sendIrrigationRequestEvent = sendIrrigationRequestEvent;
+    }
 
     public List<Plot> findAll() {
         return plotRepository.findAll();
@@ -29,7 +35,12 @@ public class PlotService {
         plot.setId(null);
         log.debug("storing new Plot entity to datastore");
 
-        return plotRepository.save(plot);
+        plot = plotRepository.save(plot);
+
+        sendIrrigationRequestEvent.publisher(plot);
+
+        return plot;
+
     }
 
     public Plot findById(Long id) {

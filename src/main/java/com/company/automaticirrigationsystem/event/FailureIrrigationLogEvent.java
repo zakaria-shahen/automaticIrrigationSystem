@@ -14,7 +14,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.support.GenericMessage;
 
-import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -23,8 +22,6 @@ import java.util.function.Consumer;
 @Slf4j
 public class FailureIrrigationLogEvent {
 
-    @Value("app.WaitBeforeAlert")
-    private static Integer waitBeforeAlert = 15;
     public static final String OUTPUT_EVENT_NAME = "failureIrrigationLogEvent-out-0";
 
     private final IrrigationLogService irrigationLogService;
@@ -39,14 +36,12 @@ public class FailureIrrigationLogEvent {
 
             log.debug(message);
             Slot slot = new Slot(slotId);
-            irrigationLogService.create(
+            irrigationLogService.saveIrrigationLogAndFindSlot(
                     IrrigationLog.builder()
-                            .dateTime(LocalDateTime.now())
                             .slot(slot)
                             .status(SlotStatus.ERROR_IRRIGATION)
                             .details(message)
-                            .build(),
-                    false
+                            .build()
             );
 
             alertService.alert(message);
@@ -55,11 +50,9 @@ public class FailureIrrigationLogEvent {
 
     public void publishing(Long slotID, Integer afterMilliseconds) {
 
-        Integer daley = afterMilliseconds + waitBeforeAlert;
+        log.debug("Publishing failureIrrigationLog Event with daley={}", afterMilliseconds);
 
-        log.debug("Publishing failureIrrigationLog Event with daley={}", daley);
-
-        Map<String, Object> headers = Map.of(MessageProperties.X_DELAY, daley);
+        Map<String, Object> headers = Map.of(MessageProperties.X_DELAY, afterMilliseconds);
 
         bridge.send(
                 OUTPUT_EVENT_NAME,

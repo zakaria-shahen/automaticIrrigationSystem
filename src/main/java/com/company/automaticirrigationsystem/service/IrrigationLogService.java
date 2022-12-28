@@ -7,8 +7,11 @@ import com.company.automaticirrigationsystem.model.enums.SlotStatus;
 import com.company.automaticirrigationsystem.repository.IrrigationLogRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Service
@@ -16,64 +19,78 @@ import java.util.List;
 @Slf4j
 public class IrrigationLogService {
 
+    @Value("app.retryBeforeAlert")
+    private static Integer retryBeforeAlert = 3;
     private final IrrigationLogRepository irrigationLogRepository;
     private final SlotService slotService;
     private final IotSlotService iotSlotService;
+    private final AlertService alertService;
 
     public List<IrrigationLog> findAll() {
         return irrigationLogRepository.findAll();
     }
 
-    public IrrigationLog findById(Long id) {
+    public IrrigationLog findById(@NotNull Long id) {
         log.debug("Retrieving the IrrigationLog entity with ID={} from the datastore.", id);
         return irrigationLogRepository.findById(id)
                 .orElseThrow(() -> new NotFound(IrrigationLog.class));
     }
 
-    public IrrigationLog create(IrrigationLog irrigationLog, boolean isIot) {
+    public IrrigationLog saveIrrigationLog(@NotNull IrrigationLog irrigationLog) {
         log.debug("storing new IrrigationLog entity to datastore and status={}", irrigationLog.getStatus());
         irrigationLog.setId(null);
-        irrigationLog.setSlot(slotService.findById(irrigationLog.getSlot().getId()));
-
-        handleSlotStatus(irrigationLog, isIot);
 
         irrigationLog = irrigationLogRepository.save(irrigationLog);
         return irrigationLog;
     }
 
-    private void handleSlotStatus(IrrigationLog irrigationLog, boolean isIot) {
+    public IrrigationLog saveIrrigationLogAndFindSlot(@NotNull IrrigationLog irrigationLog) {
+        irrigationLog.setSlot(slotService.findById(irrigationLog.getSlot().getId()));
 
-        Boolean requestStatus = iotSlotService.irrigation(irrigationLog.getSlot());
-
-        if (isIot) {
-            log.debug("Updating Slot Status by IoT");
-        } else if (requestStatus.equals(true)) {
-            irrigationLog.setStatus(SlotStatus.COMPETE_OPEN_REQUEST);
-        } else {
-            irrigationLog.setStatus(SlotStatus.ERROR_OPEN_REQUEST);
-        }
+        return saveIrrigationLog(irrigationLog);
     }
 
-    public void irrigation(List<Slot> slots) {
+    public void irrigationAll(@NotEmpty List<Slot> slots) {
+
+        log.debug("irrigation Plot with id={}", slots.get(0).getPlot().getId());
 
         List<IrrigationLog> irrigationLogs = slots.stream().map(slot -> {
             IrrigationLog irrigationLog = IrrigationLog.builder()
                     .slot(slot)
                     .build();
 
-            handleSlotStatus(irrigationLog, false);
+            irrigation(irrigationLog);
 
             return irrigationLog;
 
         }).toList();
 
         irrigationLogRepository.saveAll(irrigationLogs);
+    }
 
+    private void irrigation(@NotNull IrrigationLog irrigationLog) {
+        Slot slot = irrigationLog.getSlot();
+        Boolean requestStatus = iotSlotService.irrigation(slot);
 
+        for (int attempts = 0; requestStatus.equals(false) && attempts < retryBeforeAlert; attempts++) {
+            requestStatus = iotSlotService.irrigation(slot);
+        }
 
+        if (requestStatus.equals(false)) {
+            String message = "IoT not available";
+            log.debug(message);
+            alertService.alert(message);
+        }
 
-
+        irrigationLog.setStatus(mappingRequestStatusToSlotStatus(requestStatus));
 
     }
+
+    private SlotStatus mappingRequestStatusToSlotStatus(@NotNull boolean requestStatus) {
+        return requestStatus
+                ? SlotStatus.COMPETE_OPEN_REQUEST
+                : SlotStatus.ERROR_OPEN_REQUEST;
+    }
+
 
 }

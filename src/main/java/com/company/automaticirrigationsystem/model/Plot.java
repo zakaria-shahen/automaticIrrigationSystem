@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Entity
 @Getter
@@ -35,7 +36,8 @@ public class Plot {
     /**
      *  Irrigation every X ms
      */
-    private Integer irrigationEvery;
+    @Builder.Default
+    private Integer irrigationEvery = (int) TimeUnit.HOURS.toMillis(8);
 
     /**
      * Retry calls (If the irrigation request fails to be sent) before send Alert

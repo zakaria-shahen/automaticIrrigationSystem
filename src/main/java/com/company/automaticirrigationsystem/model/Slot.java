@@ -18,12 +18,6 @@ public class Slot {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /**
-     * Number of reconnect attempts,
-     * The value returns to zero after the connection succeeds or alert succeeds
-     */
-    private Integer attempts;
-
     @ManyToOne(optional = false)
     private Plot plot;
 

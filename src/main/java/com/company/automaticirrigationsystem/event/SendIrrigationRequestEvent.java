@@ -1,5 +1,6 @@
 package com.company.automaticirrigationsystem.event;
 
+import com.company.automaticirrigationsystem.exception.PlotDontHaveSlots;
 import com.company.automaticirrigationsystem.model.Plot;
 import com.company.automaticirrigationsystem.service.IrrigationLogService;
 import com.company.automaticirrigationsystem.service.PlotService;
@@ -13,7 +14,6 @@ import org.springframework.messaging.support.GenericMessage;
 
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 @Configuration
 @RequiredArgsConstructor
@@ -33,7 +33,11 @@ public class SendIrrigationRequestEvent {
 
             Plot plot = plotService.findById(plotId);
 
-            irrigationLogService.irrigation(plot.getSlots());
+            if (plot.getSlots() == null || plot.getSlots().isEmpty()) {
+                throw new PlotDontHaveSlots();
+            }
+
+            irrigationLogService.irrigationAll(plot.getSlots());
 
             publisher(plot);
 

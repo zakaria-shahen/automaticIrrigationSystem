@@ -19,12 +19,14 @@ public class IotSlotService {
     public Boolean irrigation(Slot slot) {
 
         log.debug("sending irrigation request to IoT");
-        boolean invokeIot = true; // Mock
+        Boolean invokeIot = true; // Mock
 
-        failureIrrigationLogEvent.publishing(
-                slot.getId(),
-                slot.getPlot().getWaitBeforeCloseSlots()
-        );
+        if (invokeIot.equals(true)) {
+            failureIrrigationLogEvent.publishing(
+                    slot.getId(),
+                    slot.getPlot().getWaitBeforeCloseSlots()
+            );
+        }
 
         return invokeIot;
     }
