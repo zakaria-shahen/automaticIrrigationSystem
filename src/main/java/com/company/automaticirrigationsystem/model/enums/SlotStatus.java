@@ -1,5 +1,8 @@
 package com.company.automaticirrigationsystem.model.enums;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum SlotStatus {
 
     /**
@@ -20,5 +23,16 @@ public enum SlotStatus {
     /**
      * Failure to complete irrigation (e.g. Problems with IoT devices)
      */
-    ERROR_IRRIGATION
+    ERROR_IRRIGATION;
+
+    @JsonCreator
+    public static SlotStatus convertToEnum(String value) {
+        return SlotStatus.valueOf(value.toUpperCase());
+    }
+
+    @JsonValue
+    public String nameLowerCase() {
+        return this.name().toLowerCase();
+    }
+
 }

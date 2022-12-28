@@ -19,6 +19,9 @@ public interface IrrigationLogMapper {
     List<IrrigationLogDto> irrigationLogToDto(List<IrrigationLog> irrigationLog);
 
     @Mapping(source = "slotId", target =  "slot.id")
+    @Mapping(target = "slot", ignore = true)
+    @Mapping(target = "dateTime", ignore = true)
+    @Mapping(target = "id", ignore = true)
     IrrigationLog dtoToIrrigationLog(IrrigationLogDto irrigationLogDto);
 
     List<IrrigationLog> dtoToIrrigationLog(List<IrrigationLogDto> irrigationLogDto);

@@ -8,7 +8,7 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-@Mapper
+@Mapper(uses = IrrigationLogMapper.class)
 public interface SlotMapper {
 
     SlotMapper INSTANCE = Mappers.getMapper(SlotMapper.class);
@@ -19,6 +19,8 @@ public interface SlotMapper {
     List<SlotDto> slotToDto(List<Slot> slotDto);
 
     @Mapping(source = "plotId", target = "plot.id")
+    @Mapping(target = "plot", ignore = true)
+    @Mapping(target = "id", ignore = true)
     Slot dtoToSlot(SlotDto slot);
 
     List<Slot> dtoToSlot(List<SlotDto> slotDto);

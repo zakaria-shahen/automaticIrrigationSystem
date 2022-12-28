@@ -3,11 +3,12 @@ package com.company.automaticirrigationsystem.mapper;
 import com.company.automaticirrigationsystem.dto.PlotDto;
 import com.company.automaticirrigationsystem.model.Plot;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-@Mapper
+@Mapper(uses = SlotMapper.class)
 public interface PlotMapper {
 
     PlotMapper INSTANCES = Mappers.getMapper(PlotMapper.class);
@@ -16,7 +17,8 @@ public interface PlotMapper {
 
     List<PlotDto> plotToDto(List<Plot> plots);
 
-    // @Mapping(target = "slots", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "slots", ignore = true)
     Plot dtoToPlot(PlotDto plotDto);
 
 }
