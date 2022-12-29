@@ -131,7 +131,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"waitBeforeCloseSlots\": 600000,\r\n    \"amountWater\": 15,\r\n    \"irrigationEvery\": 28800000,\r\n    \"retryCallLimit\": 3\r\n}",
+							"raw": "{\r\n    \"waitBeforeCloseSlots\": 600000,\r\n    \"amountWater\": 15,\r\n    \"irrigationEvery\": 1,\r\n    \"retryCallLimit\": 3\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -671,8 +671,18 @@
 					]
 				},
 				{
-					"name": "Create",
+					"name": "Create (ROLE: IOT)",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJOWnhEZWgtMENFOHg4cGFCaUVSRk4wUlRtUzNnWkdXWWQ3QUt1MHAzOXU4In0.eyJleHAiOjE2NzIzNTIxNjksImlhdCI6MTY3MjM1MDM2OSwianRpIjoiZTFhYWUwNDEtYmE4OC00N2JkLTg0ZTktMThiNjcxNWYyMThjIiwiaXNzIjoiaHR0cDovL2tleWNsb2FrOjgwODAvYXV0aC9yZWFsbXMvaW90X2F1dGgiLCJhdWQiOiJhY2NvdW50Iiwic3ViIjoiZWI1ZWRkYTgtYTNmNS00MzVhLWIxMWEtOTQ0ZmJmMTZmYzU2IiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiYXV0b21hdGljaXJyaWdhdGlvbnN5c3RlbSIsInNlc3Npb25fc3RhdGUiOiIxYjdlYzJhNS04OWIxLTQ0MmQtYWY2My01ODM1N2JiOWFjN2YiLCJhY3IiOiIxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIlJFQUxNX0lPVCIsIm9mZmxpbmVfYWNjZXNzIiwiZGVmYXVsdC1yb2xlcy1pb3RfYXV0aCIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19LCJhdXRvbWF0aWNpcnJpZ2F0aW9uc3lzdGVtIjp7InJvbGVzIjpbIklPVCJdfX0sInNjb3BlIjoiZW1haWwgcHJvZmlsZSIsInNpZCI6IjFiN2VjMmE1LTg5YjEtNDQyZC1hZjYzLTU4MzU3YmI5YWM3ZiIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwicHJlZmVycmVkX3VzZXJuYW1lIjoibXlpb3QifQ.Z4EIy7NDfrShLngpc7NwtSBq2tOainDeVCEdhf6tVnSnh4E8zNXRLNCYN8FapfoJHH6GZ3MIdxnFGZl2AdkVzRNBN65RnbealaUYst2Wo-dai8KR3ubLgPNARMGu8CkiPwVN8CKBR1rTZOKSQgS1Wo3VoXCu1OdmU7CH4cMqZ84c7vgMlOsY1eJc_WZJj7IDYJse84BiDbl6RjU-fTKJvqEpf0aboDKPUOghgPvVy8lYgtpAqNJg-PjbN6YV-RClr6IrhE2CJjkjI3x26y2m1UxwSwk8wRR_c9C19UGsObiQmSDrR27C6DrL7B5xHu3L6cbAxI8lozOG8vsySA8yYQ",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -744,6 +754,60 @@
 					]
 				}
 			]
+		},
+		{
+			"name": "get Token",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "default"
+						},
+						{
+							"key": "username",
+							"value": "myadmin",
+							"type": "default"
+						},
+						{
+							"key": "password",
+							"value": "myadmin",
+							"type": "default"
+						},
+						{
+							"key": "client_id",
+							"value": "automaticirrigationsystem",
+							"type": "default"
+						},
+						{
+							"key": "client_secret",
+							"value": "AtBTY9bBCbr9FVePV4wwpm1CBdBH3xZ0",
+							"type": "default"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://keycloak:8080/auth/realms/iot_auth/protocol/openid-connect/token",
+					"protocol": "http",
+					"host": [
+						"keycloak"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"realms",
+						"iot_auth",
+						"protocol",
+						"openid-connect",
+						"token"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [

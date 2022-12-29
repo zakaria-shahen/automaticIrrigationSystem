@@ -6,6 +6,12 @@ servers:
   - url: http://{{url}}plot
   - url: http://{{url}}slot
   - url: http://{{url}}irrigation_log
+  - url: http://keycloak:8080
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
 tags:
   - name: Plot
   - name: Slot
@@ -78,7 +84,7 @@ paths:
     post:
       tags:
         - IrrigationLog
-      summary: Create
+      summary: 'Create (ROLE: IOT)'
       requestBody:
         content:
           application/json:
@@ -87,6 +93,8 @@ paths:
               example:
                 status: compete_irrigation
                 slotId: 1
+      security:
+        - bearerAuth: []
       responses:
         '200':
           description: OK
@@ -237,3 +245,34 @@ paths:
               schema:
                 type: string
               example: null
+  /auth/realms/iot_auth/protocol/openid-connect/token:
+    post:
+      tags:
+        - default
+      summary: get Token
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                grant_type:
+                  type: string
+                  example: password
+                username:
+                  type: string
+                  example: myadmin
+                password:
+                  type: string
+                  example: myadmin
+                client_id:
+                  type: string
+                  example: automaticirrigationsystem
+                client_secret:
+                  type: string
+                  example: AtBTY9bBCbr9FVePV4wwpm1CBdBH3xZ0
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}

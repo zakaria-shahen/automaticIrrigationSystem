@@ -25,6 +25,29 @@ services:
     networks:
       backend:
 
+  keycloak:
+    image: jboss/keycloak
+    container_name: keycloak
+    environment:
+      - KEYCLOAK_IMPORT=/tmp/realm-export.json
+      - KEYCLOAK_USER=admin
+      - DB_VENDOR=h2
+      - KEYCLOAK_PASSWORD=admin
+    volumes:
+      - ./realm-export.json:/tmp/realm-export.json
+    command:
+      - "-b 0.0.0.0"
+#      - "-Djboss.socket.binding.port-offset=5"
+      - "-Dkeycloak.profile.feature.scripts=enabled"
+      - "-Dkeycloak.profile.feature.upload_scripts=enabled"
+    ports:
+      - "8080:8080"
+    networks:
+      backend:
+    depends_on:
+      - mysql
+
+
 networks:
   backend:
     driver: bridge
