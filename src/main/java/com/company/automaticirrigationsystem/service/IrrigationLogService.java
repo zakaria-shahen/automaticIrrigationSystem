@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -21,7 +20,6 @@ public class IrrigationLogService {
     private final IrrigationLogRepository irrigationLogRepository;
     private final SlotService slotService;
     private final IotSlotService iotSlotService;
-    private final AlertService alertService;
 
     public List<IrrigationLog> findAll() {
         return irrigationLogRepository.findAll();
@@ -47,7 +45,7 @@ public class IrrigationLogService {
         return saveIrrigationLog(irrigationLog);
     }
 
-    public void irrigationAll(@NotEmpty List<Slot> slots) {
+    public void irrigationAllAndLog(List<Slot> slots) {
 
         log.debug("irrigation Plot with id={}", slots.get(0).getPlot().getId());
 
@@ -56,8 +54,8 @@ public class IrrigationLogService {
                     .slot(slot)
                     .build();
 
-            boolean requestStatus = irrigation(irrigationLog);
-            irrigationLog.setStatus(mappingRequestStatusToSlotStatus(requestStatus));
+            boolean requestStatus = iotSlotService.irrigationWithRetry(slot, slot.getPlot().getRetryCallLimit());
+            irrigationLog.setStatus(mappingIotRequestStatusToSlotStatus(requestStatus));
             return irrigationLog;
 
         }).toList();
@@ -65,26 +63,7 @@ public class IrrigationLogService {
         irrigationLogRepository.saveAll(irrigationLogs);
     }
 
-    private Boolean irrigation(@NotNull IrrigationLog irrigationLog) {
-        Slot slot = irrigationLog.getSlot();
-        Boolean requestStatus = iotSlotService.irrigation(slot);
-        int retryBeforeAlert = irrigationLog.getSlot().getPlot().getRetryCallLimit();
-
-        while (requestStatus.equals(false) && retryBeforeAlert > 0) {
-            retryBeforeAlert--;
-            requestStatus = iotSlotService.irrigation(slot);
-        }
-
-        if (requestStatus.equals(false)) {
-            String message = "IoT not available";
-            log.debug(message);
-            alertService.alert(message);
-        }
-        
-        return requestStatus;
-    }
-
-    private SlotStatus mappingRequestStatusToSlotStatus(@NotNull boolean requestStatus) {
+    public SlotStatus mappingIotRequestStatusToSlotStatus(boolean requestStatus) {
         return requestStatus
                 ? SlotStatus.COMPETE_OPEN_REQUEST
                 : SlotStatus.ERROR_OPEN_REQUEST;

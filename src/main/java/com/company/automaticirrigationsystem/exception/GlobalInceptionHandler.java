@@ -27,9 +27,9 @@ public class GlobalInceptionHandler extends ResponseEntityExceptionHandler {
         return new Object();
     }
 
-    @ExceptionHandler({
-            PlotDontHaveSlots.class
-    })
+    // @ExceptionHandler({
+
+    // })
     @ResponseStatus(HttpStatus.CONFLICT)
     public Object conflict(Exception ex, WebRequest webRequest) {
         return new Object();

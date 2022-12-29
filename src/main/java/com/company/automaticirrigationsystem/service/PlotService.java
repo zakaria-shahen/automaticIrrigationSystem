@@ -5,12 +5,10 @@ import com.company.automaticirrigationsystem.event.SendIrrigationRequestEvent;
 import com.company.automaticirrigationsystem.exception.IdNotEntered;
 import com.company.automaticirrigationsystem.exception.NotFound;
 import com.company.automaticirrigationsystem.model.Plot;
-import com.company.automaticirrigationsystem.model.Slot;
 import com.company.automaticirrigationsystem.repository.PlotRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Hibernate;
-import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,8 +18,8 @@ import java.util.Objects;
 @Slf4j
 public class PlotService {
 
-    private final PlotRepository plotRepository;
-    private final SendIrrigationRequestEvent sendIrrigationRequestEvent;
+    private PlotRepository plotRepository;
+    private SendIrrigationRequestEvent sendIrrigationRequestEvent;
 
     public PlotService(PlotRepository plotRepository, @Lazy SendIrrigationRequestEvent sendIrrigationRequestEvent) {
         this.plotRepository = plotRepository;
@@ -44,7 +42,7 @@ public class PlotService {
 
     }
 
-    public Plot findById(Long id) {
+    public Plot findById(@NonNull Long id) {
         log.debug("Retrieving the plot entity with ID={} from the datastore.", id);
         return plotRepository.findById(id)
                 .orElseThrow(() ->  new NotFound(Plot.class));
@@ -68,19 +66,9 @@ public class PlotService {
 
         Plot target = findById(plot.getId());
 
-        BeanUtils.copyProperties(plot, target, "id", "slots");
+        // BeanUtils.copyProperties(plot, target, "slots");
 
         log.debug("updating plot entity with id={} from datastore", target.getId());
         return plotRepository.save(target);
-    }
-
-    public Plot getLatestPlot(Slot newer, Slot older) {
-        if (! older.getPlot().getId().equals(newer.getPlot().getId())) {
-            log.debug("Retrieving newer plot from datastore");
-            return findById(newer.getPlot().getId());
-        }
-
-        log.debug("No difference between newer and older Plot");
-        return older.getPlot();
     }
 }

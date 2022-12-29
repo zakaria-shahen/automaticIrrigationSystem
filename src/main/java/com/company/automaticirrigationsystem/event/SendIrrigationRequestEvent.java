@@ -1,6 +1,5 @@
 package com.company.automaticirrigationsystem.event;
 
-import com.company.automaticirrigationsystem.exception.PlotDontHaveSlots;
 import com.company.automaticirrigationsystem.exception.RabbitMQConnectionError;
 import com.company.automaticirrigationsystem.model.Plot;
 import com.company.automaticirrigationsystem.service.IrrigationLogService;
@@ -14,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.support.GenericMessage;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 @Configuration
@@ -36,11 +36,9 @@ public class SendIrrigationRequestEvent {
 
             Plot plot = plotService.findByIdAndLoadSlots(plotId);
 
-            if (plot.getSlots() == null || plot.getSlots().isEmpty()) {
-                throw new PlotDontHaveSlots();
+            if (Objects.nonNull(plot.getSlots()) && plot.getSlots().isEmpty()) {
+                irrigationLogService.irrigationAllAndLog(plot.getSlots());
             }
-
-            irrigationLogService.irrigationAll(plot.getSlots());
 
             publisher(plot);
 
