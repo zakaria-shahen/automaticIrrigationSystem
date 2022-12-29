@@ -1,4 +1,4 @@
-### automatic Irrigation System:
+### Automatic Irrigation System:
 
 ## How To Run
 
