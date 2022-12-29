@@ -107,6 +107,7 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
+					<imageName>company/${project.artifactId}:${project.version}</imageName>
 				</configuration>
 			</plugin>
 			<plugin>

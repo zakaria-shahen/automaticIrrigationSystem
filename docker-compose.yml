@@ -1,5 +1,22 @@
 version: "3.8"
 services:
+
+  app:
+    container_name: app
+#    image: company/automaticirrigationsystem:0.0.1-SNAPSHOT
+    build:
+      dockerfile: Dockerfile
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/automatic_irrigation_system
+      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_RABBITMQ_HOST=rabbitmq
+    ports:
+      - "8081:8081"
+    networks:
+      backend:
+    depends_on:
+      - mysql
+
   mysql:
     image: mysql
     container_name: mysql
@@ -44,8 +61,6 @@ services:
       - "8080:8080"
     networks:
       backend:
-    depends_on:
-      - mysql
 
 
 networks:

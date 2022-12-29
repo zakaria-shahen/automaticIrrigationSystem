@@ -36,7 +36,6 @@ public class IrrigationLogController {
     }
 
     @PostMapping
-    // TODO: IoT Only
     public IrrigationLogDto post(@Valid @RequestBody IrrigationLogDto irrigationLogDto) {
         log.debug("visited POST `{}` path", "/irrigation_log");
 

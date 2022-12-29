@@ -1,0 +1,16 @@
+FROM openjdk:20-ea-17-slim as build
+
+LABEL maintainer="Zakara Shahen <secret@gmail.com>"
+
+WORKDIR project
+COPY . /project
+
+RUN --mount=type=cache,target=/root/.m2 ./mvnw install -DskipTests
+
+FROM openjdk:20-ea-17-slim
+
+WORKDIR project
+ARG JAVA_PATH=target/*.jar
+COPY --from=build project/${JAVA_PATH} app.jar
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
