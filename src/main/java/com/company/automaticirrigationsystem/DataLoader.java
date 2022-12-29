@@ -29,11 +29,13 @@ public class DataLoader implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         var ms = (int) TimeUnit.MINUTES.toMillis(10);
+        var every = (int) TimeUnit.HOURS.toMillis(12);
+
         var plotList = List.of(
-                Plot.builder().amountWater(1f).waitBeforeCloseSlots(ms).build(),
-                Plot.builder().amountWater(1f).waitBeforeCloseSlots(ms).build(),
-                Plot.builder().amountWater(1f).waitBeforeCloseSlots(ms).build(),
-                Plot.builder().amountWater(1f).waitBeforeCloseSlots(ms).build()
+                Plot.builder().amountWater(1f).irrigationEvery(60000).waitBeforeCloseSlots(ms).build(),
+                Plot.builder().amountWater(1f).irrigationEvery(every).waitBeforeCloseSlots(ms).build(),
+                Plot.builder().amountWater(1f).irrigationEvery(every).waitBeforeCloseSlots(ms).build(),
+                Plot.builder().amountWater(1f).irrigationEvery(every).waitBeforeCloseSlots(ms).build()
         );
 
         plotList = plotList.stream().map(plotService::create).toList();

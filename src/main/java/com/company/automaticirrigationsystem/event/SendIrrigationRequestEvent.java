@@ -21,7 +21,7 @@ import java.util.function.Consumer;
 @Slf4j
 public class SendIrrigationRequestEvent {
 
-    public static final String OUTPUT_EVENT_NAME = "failureIrrigationLogEvent-out-0";
+    public static final String OUTPUT_EVENT_NAME = "sendIrrigationRequestEvent-out-0";
 
     private final IrrigationLogService irrigationLogService;
     private final PlotService plotService;
@@ -36,7 +36,7 @@ public class SendIrrigationRequestEvent {
 
             Plot plot = plotService.findByIdAndLoadSlots(plotId);
 
-            if (Objects.nonNull(plot.getSlots()) && plot.getSlots().isEmpty()) {
+            if (Objects.nonNull(plot.getSlots()) && ! plot.getSlots().isEmpty()) {
                 irrigationLogService.irrigationAllAndLog(plot.getSlots());
             }
 
