@@ -8,6 +8,7 @@ import com.company.automaticirrigationsystem.model.Plot;
 import com.company.automaticirrigationsystem.model.Slot;
 import com.company.automaticirrigationsystem.repository.PlotRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -46,6 +47,12 @@ public class PlotService {
     public Plot findById(Long id) {
         log.debug("Retrieving the plot entity with ID={} from the datastore.", id);
         return plotRepository.findById(id)
+                .orElseThrow(() ->  new NotFound(Plot.class));
+    }
+
+    public Plot findByIdAndLoadSlots(Long id) {
+        log.debug("Retrieving the plot entity with ID={} from the datastore.", id);
+        return plotRepository.findByIdAndLoadSlots(id)
                 .orElseThrow(() ->  new NotFound(Plot.class));
     }
 

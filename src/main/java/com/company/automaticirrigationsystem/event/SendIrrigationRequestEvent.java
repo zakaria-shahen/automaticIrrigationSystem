@@ -34,7 +34,7 @@ public class SendIrrigationRequestEvent {
 
             log.debug("Consuming sendIrrigationRequestEvent with PlotId={}", plotId);
 
-            Plot plot = plotService.findById(plotId);
+            Plot plot = plotService.findByIdAndLoadSlots(plotId);
 
             if (plot.getSlots() == null || plot.getSlots().isEmpty()) {
                 throw new PlotDontHaveSlots();
