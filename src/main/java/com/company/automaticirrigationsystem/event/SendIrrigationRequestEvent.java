@@ -1,6 +1,7 @@
 package com.company.automaticirrigationsystem.event;
 
 import com.company.automaticirrigationsystem.exception.PlotDontHaveSlots;
+import com.company.automaticirrigationsystem.exception.RabbitMQConnectionError;
 import com.company.automaticirrigationsystem.model.Plot;
 import com.company.automaticirrigationsystem.service.IrrigationLogService;
 import com.company.automaticirrigationsystem.service.PlotService;
@@ -49,10 +50,15 @@ public class SendIrrigationRequestEvent {
     public void publisher(Plot plot) {
         log.debug("Publishing sendIrrigationRequestEventListener Event with daley={}", plot.getIrrigationEvery());
         Map<String, Object> headers = Map.of(MessageProperties.X_DELAY, plot.getIrrigationEvery());
-        streamBridge.send(
-                OUTPUT_EVENT_NAME,
-                new GenericMessage<>(plot.getId(), headers)
-        );
+
+        try {
+            streamBridge.send(
+                    OUTPUT_EVENT_NAME,
+                    new GenericMessage<>(plot.getId(), headers)
+            );
+        } catch (Exception e) {
+            throw new RabbitMQConnectionError(e);
+        }
     }
 
 

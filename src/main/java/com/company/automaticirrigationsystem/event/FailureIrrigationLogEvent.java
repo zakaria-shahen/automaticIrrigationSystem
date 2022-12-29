@@ -1,5 +1,6 @@
 package com.company.automaticirrigationsystem.event;
 
+import com.company.automaticirrigationsystem.exception.RabbitMQConnectionError;
 import com.company.automaticirrigationsystem.model.IrrigationLog;
 import com.company.automaticirrigationsystem.model.Slot;
 import com.company.automaticirrigationsystem.model.enums.SlotStatus;
@@ -8,7 +9,6 @@ import com.company.automaticirrigationsystem.service.IrrigationLogService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.MessageProperties;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -54,11 +54,15 @@ public class FailureIrrigationLogEvent {
 
         Map<String, Object> headers = Map.of(MessageProperties.X_DELAY, afterMilliseconds);
 
-        bridge.send(
-                OUTPUT_EVENT_NAME,
-                new GenericMessage<>(slotID, headers)
-        );
+        try {
+            bridge.send(
+                    OUTPUT_EVENT_NAME,
+                    new GenericMessage<>(slotID, headers)
+            );
 
+        } catch (Exception e) {
+            throw new RabbitMQConnectionError(e);
+        }
     }
 
 }
