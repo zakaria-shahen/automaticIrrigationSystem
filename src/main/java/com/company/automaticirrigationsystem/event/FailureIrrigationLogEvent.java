@@ -30,7 +30,7 @@ public class FailureIrrigationLogEvent {
 
 
     @Bean
-    protected Consumer<Long> failureIrrigationLogEventListener() {
+    public Consumer<Long> failureIrrigationLogEventListener() {
         return slotId -> {
             String message = "The irrigation request has been sent to the IoT, but no callback for completing the process within the designated delay has been received.";
 

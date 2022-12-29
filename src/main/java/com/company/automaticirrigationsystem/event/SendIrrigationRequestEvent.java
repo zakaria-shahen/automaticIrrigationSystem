@@ -31,6 +31,8 @@ public class SendIrrigationRequestEvent {
     public Consumer<Long> sendIrrigationRequestEventListener() {
         return plotId -> {
 
+            log.debug("Consuming sendIrrigationRequestEvent with PlotId={}", plotId);
+
             Plot plot = plotService.findById(plotId);
 
             if (plot.getSlots() == null || plot.getSlots().isEmpty()) {
