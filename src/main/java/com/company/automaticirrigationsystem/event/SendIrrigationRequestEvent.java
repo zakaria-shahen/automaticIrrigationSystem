@@ -34,13 +34,18 @@ public class SendIrrigationRequestEvent {
 
             log.debug("Consuming sendIrrigationRequestEvent with PlotId={}", plotId);
 
-            Plot plot = plotService.findByIdAndLoadSlots(plotId);
+            plotService.findByIdAndLoadSlots(plotId).ifPresentOrElse(
+                    plot -> {
 
-            if (Objects.nonNull(plot.getSlots()) && ! plot.getSlots().isEmpty()) {
-                irrigationLogService.irrigationAllAndLog(plot.getSlots());
-            }
+                        if (Objects.nonNull(plot.getSlots()) && !plot.getSlots().isEmpty()) {
+                            irrigationLogService.irrigationAllAndLog(plot.getSlots());
+                        }
 
-            publisher(plot);
+                        publisher(plot);
+                    },
+
+                    () -> log.debug("Not Found Plot with Id={} - Stopping republishing this event instance", plotId)
+            );
 
         };
     }

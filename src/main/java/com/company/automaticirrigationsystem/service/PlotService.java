@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -48,10 +49,9 @@ public class PlotService {
                 .orElseThrow(() ->  new NotFound(Plot.class));
     }
 
-    public Plot findByIdAndLoadSlots(Long id) {
+    public Optional<Plot> findByIdAndLoadSlots(Long id) {
         log.debug("Retrieving the plot entity with ID={} from the datastore.", id);
-        return plotRepository.findByIdAndLoadSlots(id)
-                .orElseThrow(() ->  new NotFound(Plot.class));
+        return plotRepository.findByIdAndLoadSlots(id);
     }
 
     public void deleteById(Long id) {

@@ -1,5 +1,6 @@
 package com.company.automaticirrigationsystem.event;
 
+import com.company.automaticirrigationsystem.exception.NotFound;
 import com.company.automaticirrigationsystem.exception.RabbitMQConnectionError;
 import com.company.automaticirrigationsystem.model.IrrigationLog;
 import com.company.automaticirrigationsystem.model.Slot;
@@ -36,15 +37,22 @@ public class FailureIrrigationLogEvent {
 
             log.debug(message);
             Slot slot = new Slot(slotId);
-            irrigationLogService.saveIrrigationLogAndFindSlot(
-                    IrrigationLog.builder()
-                            .slot(slot)
-                            .status(SlotStatus.ERROR_IRRIGATION)
-                            .details(message)
-                            .build()
-            );
 
-            alertService.alert(message);
+            try {
+                irrigationLogService.saveIrrigationLogAndFindSlot(
+                        IrrigationLog.builder()
+                                .slot(slot)
+                                .status(SlotStatus.ERROR_IRRIGATION)
+                                .details(message)
+                                .build()
+                );
+
+                alertService.alert(message);
+                
+            } catch (NotFound e) {
+                 log.debug(e.getMessage());
+            }
+
         };
     }
 

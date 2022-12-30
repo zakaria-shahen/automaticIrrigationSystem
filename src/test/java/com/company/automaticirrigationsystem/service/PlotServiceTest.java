@@ -84,9 +84,9 @@ class PlotServiceTest {
         }
 
         @Test
-        void notFoundAndThrow() {
+        void notFoundAndReturnEmptyOptional() {
             given(plotRepository.findByIdAndLoadSlots(any())).willReturn(Optional.empty());
-            Assertions.assertThrows(NotFound.class, () -> plotService.findByIdAndLoadSlots(1L));
+            Assertions.assertTrue(plotService.findByIdAndLoadSlots(1L).isEmpty());
             then(plotRepository).should().findByIdAndLoadSlots(1L);
         }
     }
