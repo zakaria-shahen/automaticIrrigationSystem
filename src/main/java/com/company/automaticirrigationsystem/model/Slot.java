@@ -29,6 +29,7 @@ public class Slot {
     private List<IrrigationLog> irrigationLogs;
 
     @Builder.Default
+    @Column(nullable = false)
     private Boolean deleted = false;
 
     public Slot(Long id) {

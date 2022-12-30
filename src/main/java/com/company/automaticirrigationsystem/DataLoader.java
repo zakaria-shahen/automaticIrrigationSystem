@@ -4,6 +4,7 @@ import com.company.automaticirrigationsystem.event.FailureIrrigationLogEvent;
 import com.company.automaticirrigationsystem.model.IrrigationLog;
 import com.company.automaticirrigationsystem.model.Plot;
 import com.company.automaticirrigationsystem.model.Slot;
+import com.company.automaticirrigationsystem.model.enums.SlotStatus;
 import com.company.automaticirrigationsystem.repository.IrrigationLogRepository;
 import com.company.automaticirrigationsystem.repository.SlotRepository;
 import com.company.automaticirrigationsystem.service.PlotService;
@@ -55,10 +56,10 @@ public class DataLoader implements ApplicationRunner {
         log.warn("Slot data loaded - Dump Data");
 
         var irrigationLogList = List.of(
-                IrrigationLog.builder().slot(slotList.get(0)).build(),
-                IrrigationLog.builder().slot(slotList.get(1)).build(),
-                IrrigationLog.builder().slot(slotList.get(2)).build(),
-                IrrigationLog.builder().slot(slotList.get(3)).build()
+                IrrigationLog.builder().slot(slotList.get(1)).status(SlotStatus.COMPETE_OPEN_REQUEST).build(),
+                IrrigationLog.builder().slot(slotList.get(2)).status(SlotStatus.COMPETE_OPEN_REQUEST).build(),
+                IrrigationLog.builder().slot(slotList.get(3)).status(SlotStatus.COMPETE_OPEN_REQUEST).build(),
+                IrrigationLog.builder().slot(slotList.get(0)).status(SlotStatus.COMPETE_OPEN_REQUEST).build()
         );
 
         irrigationLogList = irrigationLogRepository.saveAll(irrigationLogList);

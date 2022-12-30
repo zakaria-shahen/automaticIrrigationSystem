@@ -30,6 +30,7 @@ public class Plot {
     /**
      * Wait X ms before close slot
      */
+    @Column(nullable = false)
     private Integer waitBeforeCloseSlots;
 
     /**
@@ -41,17 +42,20 @@ public class Plot {
      *  Irrigation every X ms
      */
     @Builder.Default
+    @Column(nullable = false)
     private Integer irrigationEvery = (int) TimeUnit.HOURS.toMillis(8);
 
     /**
      * Retry calls (If the irrigation request fails to be sent) before send Alert
      */
     @Builder.Default
-    private Integer retryCallLimit = 3;
+    @Column(nullable = false)
+    private Integer retryBeforeAlert = 3;
 
     @OneToMany(mappedBy = "plot", cascade = CascadeType.REMOVE)
     private List<Slot> slots;
 
     @Builder.Default
+    @Column(nullable = false)
     private Boolean deleted = false;
 }

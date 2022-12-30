@@ -54,7 +54,7 @@ public class IrrigationLogService {
                     .slot(slot)
                     .build();
 
-            boolean requestStatus = iotSlotService.irrigationWithRetry(slot, slot.getPlot().getRetryCallLimit());
+            boolean requestStatus = iotSlotService.irrigationWithRetry(slot, slot.getPlot().getRetryBeforeAlert());
             irrigationLog.setStatus(mappingIotRequestStatusToSlotStatus(requestStatus));
             return irrigationLog;
 

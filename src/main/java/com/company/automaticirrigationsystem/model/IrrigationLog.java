@@ -3,6 +3,7 @@ package com.company.automaticirrigationsystem.model;
 import com.company.automaticirrigationsystem.model.enums.SlotStatus;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLUpdate;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
@@ -25,6 +26,7 @@ public class IrrigationLog {
     @Builder.Default
     private LocalDateTime dateTime = LocalDateTime.now();
 
+    @Column(columnDefinition = "tinyint", nullable = false)
     private SlotStatus status;
 
     private String details;
@@ -33,6 +35,7 @@ public class IrrigationLog {
     private Slot slot;
 
     @Builder.Default
+    @Column(nullable = false)
     private Boolean deleted = false;
 
 }

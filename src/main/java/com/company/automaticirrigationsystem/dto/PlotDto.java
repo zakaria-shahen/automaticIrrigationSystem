@@ -31,7 +31,7 @@ public class PlotDto extends RepresentationModel<PlotDto> {
     private Integer irrigationEvery;
 
     @PositiveOrZero
-    private Integer retryCallLimit;
+    private Integer retryBeforeAlert;
 
     private List<SlotDto> slots;
 
