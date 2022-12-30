@@ -29,4 +29,5 @@
 
 ### How To use
 
-- [automaticIrrigationSystem.postman_collection.json](automaticIrrigationSystem.postman_collection.json)
+- Postman: [automaticIrrigationSystem.postman_collection.json](automaticIrrigationSystem.postman_collection.json)
+- Swagger-ui: [http://localhost:8081/swagger-ui/index.html](http://localhost:8081/swagger-ui/index.html)
