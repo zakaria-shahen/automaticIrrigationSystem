@@ -7,6 +7,7 @@ import com.company.automaticirrigationsystem.exception.NotFound;
 import com.company.automaticirrigationsystem.model.Plot;
 import com.company.automaticirrigationsystem.repository.PlotRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -43,7 +44,7 @@ public class PlotService {
 
     }
 
-    public Plot findById(@NonNull Long id) {
+    public Plot findById(@NonNull Long id) throws NotFound{
         log.debug("Retrieving the plot entity with ID={} from the datastore.", id);
         return plotRepository.findById(id)
                 .orElseThrow(() ->  new NotFound(Plot.class));
@@ -66,7 +67,7 @@ public class PlotService {
 
         Plot target = findById(plot.getId());
 
-        // BeanUtils.copyProperties(plot, target, "slots");
+        BeanUtils.copyProperties(plot, target, "slots");
 
         log.debug("updating plot entity with id={} from datastore", target.getId());
         return plotRepository.save(target);
